@@ -1,0 +1,33 @@
+import os
+import sched
+import subprocess
+import time
+
+LOG_FILE=os.path.join(os.sep, 'home', 'baclark', 'scheduler.log')
+DELAY_HOURS = 12
+
+# Create scheduler.
+scheduler = sched.scheduler(time.time, time.sleep)
+
+# Define delayed function.
+def create_predict_jobs():
+    regions = '9,10,12-16'
+    script = 'scripts/predict/nifti/segmenter/spartan/array/predict_segmenter_pmcc_hn'
+    test_folds = [1, 2, 3, 4]
+    models = ['clinical', 'transfer']
+    n_trains = [5, 10, 20, 50, 100, 200, 'None']
+
+    for model in models:
+        for test_fold in test_folds:
+            for n_train in n_trains:
+                # Create slurm command.
+                export = f'ALL,MODEL={model},N_TRAIN={n_train},TEST_FOLD={test_fold}'
+                command = f'sbatch --array={regions} --export={export} {script}' 
+                with open(LOG_FILE, 'w') as f:
+                    f.write(f'{command}\n')
+                process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
+                process.communicate()
+
+# Schedule delayed function.
+scheduler.enter(DELAY_HOURS * 60 * 60, 1, create_predict_jobs)
+scheduler.run()

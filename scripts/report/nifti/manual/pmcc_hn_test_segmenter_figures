@@ -1,0 +1,38 @@
+#! /usr/bin/env bash
+
+parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")"; cd ..; pwd -P )
+cd $parent_path
+
+DATASET="PMCC-HN-TEST"
+region=(
+    # 'BrachialPlexus_L'  # 0
+    # 'BrachialPlexus_R'  # 1
+    # 'Brain'             # 2
+    # 'BrainStem'         # 3
+    'Cochlea_L'         # 4
+    'Cochlea_R'         # 5
+    # 'Lens_L'            # 6
+    # 'Lens_R'            # 7
+    # 'Mandible'          # 8
+    # 'OpticNerve_L'      # 9
+    # 'OpticNerve_R'      # 10
+    # 'OralCavity'        # 11
+    # 'Parotid_L'         # 12
+    # 'Parotid_R'         # 13
+    # 'SpinalCord'        # 14
+    # 'Submandibular_L'   # 15
+    # 'Submandibular_R'   # 16
+)
+RUN="public-1gpu-100epochs"
+SEGMENTERS=()
+for i in "${!REGIONS[@]}"; do
+    segmenter="('segmenter-${REGIONS[i]}','$RUN','BEST')"
+    SEGMENTERS+=($segmenter)
+done
+
+# Convert to string.
+region=$(IFS=$','; echo "${REGIONS[*]}")
+SEGMENTERS=$(IFS=$','; echo "${SEGMENTERS[*]}")
+
+python segmenter_figures --dataset $DATASET --regions $REGIONS --segmenters $SEGMENTERS
+

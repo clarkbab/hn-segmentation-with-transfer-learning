@@ -1,0 +1,13 @@
+import fire
+import os
+import sys
+
+root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..'))
+sys.path.append(root_dir)
+
+from hnas.evaluation.dataset.nifti import create_patient_localiser_evaluation
+
+fire.Fire(create_patient_localiser_evaluation)
+
+# Sample args:
+# --dataset PMCC-HN-TEST --pat_id '100' --region Parotid_L --localiser "(...)"

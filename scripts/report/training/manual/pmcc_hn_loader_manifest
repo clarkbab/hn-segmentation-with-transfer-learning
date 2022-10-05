@@ -1,0 +1,13 @@
+#! /usr/bin/env bash
+
+parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; cd ..; pwd -P )
+cd $parent_path
+
+DATASETS="['PMCC-HN-TEST-LOC','PMCC-HN-TRAIN-LOC']"
+N_FOLDS=5
+TEST_FOLD=0
+
+python loader_manifest \
+    --datasets $DATASETS \
+    --n_folds 5 \
+    --test_fold 0

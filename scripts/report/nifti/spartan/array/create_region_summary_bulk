@@ -1,0 +1,20 @@
+import subprocess
+
+regions = '0-16'
+script = 'scripts/report/nifti/spartan/array/region-summary/create_region_summary'
+datasets = [
+    'HN1',
+    'HNPCT',
+    'HNSCC',
+    'OPC',
+    'PMCC-HN-TEST',
+    'PMCC-HN-TRAIN'
+]
+
+for dataset in datasets:
+    # Create slurm command.
+    export = f'ALL,DATASET={dataset}'
+    command = f'sbatch --array={regions} --export={export} {script}' 
+    print(command)
+    process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
+    process.communicate()

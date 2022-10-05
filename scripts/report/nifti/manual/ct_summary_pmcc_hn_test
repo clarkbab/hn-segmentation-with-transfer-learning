@@ -1,0 +1,8 @@
+#! /usr/bin/env bash
+
+parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")"; cd ..; pwd -P )
+cd $parent_path
+
+DATASET="PMCC-HN-TEST"
+
+python create_ct_summary --dataset $DATASET --regions $REGIONS

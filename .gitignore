@@ -1,0 +1,11 @@
+__pycache__
+*.pyc
+*.out
+.vscode
+build
+dist
+lightning_logs
+hnas.egg-info
+slurm-*
+
+MNIST

@@ -1,0 +1,35 @@
+#! /usr/bin/env bash
+
+parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")"; cd ..; pwd -P )
+cd $parent_path
+
+DATASETS="('PMCC-HN-TEST-LOC','PMCC-HN-TRAIN-LOC')" # Code links from 'training' set to nifti set.
+region=(
+    'BrachialPlexus_L'  # 0
+    # 'BrachialPlexus_R'  # 1
+    # 'Brain'             # 2
+    # 'BrainStem'         # 3
+    # 'Cochlea_L'         # 4
+    # 'Cochlea_R'         # 5
+    # 'Lens_L'            # 6
+    # 'Lens_R'            # 7
+    # 'Mandible'          # 8
+    # 'OpticNerve_L'      # 9
+    # 'OpticNerve_R'      # 10
+    # 'OralCavity'        # 11
+    # 'Parotid_L'         # 12
+    # 'Parotid_R'         # 13
+    # 'SpinalCord'        # 14
+    # 'Submandibular_L'   # 15
+    # 'Submandibular_R'   # 16
+)
+N_FOLDS=5
+SEGMENTER_SPACING="(1,1,2)"
+TEST_FOLDS=0
+
+for i in "${!REGIONS[@]}"; do
+    localiser="('localiser-${REGIONS[i]}','public-1gpu-150epochs','BEST')"
+    segmenter="('segmenter-${REGIONS[i]}','public-1gpu-150epochs','BEST')"
+    python create_predictions_from_loader --datasets $DATASETS --region ${REGIONS[i]} --localiser $localiser --segmenter $segmenter --seg_spacing $SEGMENTER_SPACING \
+        --n_folds $N_FOLDS --test_folds $TEST_FOLDS        
+done

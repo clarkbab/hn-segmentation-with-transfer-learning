@@ -1,0 +1,34 @@
+#! /usr/bin/env bash
+
+parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")"; cd ..; pwd -P )
+cd $parent_path
+
+DATASET="PMCC-HN-TEST"
+PATIENT="19"
+region=(
+    # 'BrachialPlexus_L'  # 0
+    # 'BrachialPlexus_R'  # 1
+    # 'Brain'             # 2
+    # 'BrainStem'         # 3
+    # 'Cochlea_L'         # 4
+    # 'Cochlea_R'         # 5
+    # 'Lens_L'            # 6
+    # 'Lens_R'            # 7
+    # 'Mandible'          # 8
+    'OpticNerve_L'      # 9
+    # 'OpticNerve_R'      # 10
+    # 'OralCavity'        # 11
+    # 'Parotid_L'         # 12
+    # 'Parotid_R'         # 13
+    # 'SpinalCord'        # 14
+    # 'Submandibular_L'   # 15
+    # 'Submandibular_R'   # 16
+)
+SEGMENTER_SPACING="(1,1,2)"
+
+for i in "${!REGIONS[@]}"; do
+    localiser="('localiser-${REGIONS[i]}','public-1gpu-100epochs','BEST')"
+    segmenter="('segmenter-${REGIONS[i]}','public-1gpu-100epochs','BEST')"
+    python create_patient_prediction --dataset $DATASET --pat_id $PATIENT --region ${REGIONS[i]} --localiser $localiser --segmenter $segmenter \
+        --seg_spacing $SEGMENTER_SPACING 
+done

@@ -1,0 +1,52 @@
+#!/bin/bash
+#SBATCH --nodes 1
+#SBATCH --partition physical
+#SBATCH --mem 32G
+#SBATCH --time 0-2:00:00
+#SBATCH -A punim1413
+
+module load gcccore/8.3.0
+module load python/3.8.2
+module load web_proxy
+
+version=$(python --version)
+echo $version
+
+DATASETS="('PMCC-HN-TEST-LOC','PMCC-HN-TRAIN-LOC')" # Code links from 'training' set to nifti set.
+region=(
+    'BrachialPlexus_L'  # 0
+    'BrachialPlexus_R'  # 1
+    'Brain'             # 2
+    'BrainStem'         # 3
+    'Cochlea_L'         # 4
+    'Cochlea_R'         # 5
+    'Lens_L'            # 6
+    'Lens_R'            # 7
+    'Mandible'          # 8
+    'OpticNerve_L'      # 9
+    'OpticNerve_R'      # 10
+    'OralCavity'        # 11
+    'Parotid_L'         # 12
+    'Parotid_R'         # 13
+    'SpinalCord'        # 14
+    'Submandibular_L'   # 15
+    'Submandibular_R'   # 16
+)
+REGION=${REGIONS[$SLURM_ARRAY_TASK_ID]}
+N_FOLDS=5
+SCRIPT_DIR="/data/gpfs/projects/punim1413/medical-imaging/scripts"
+TEST_FOLDS=(
+    0
+    # 1
+    # 2
+    # 3
+    # 4
+)
+
+for i in "${!TEST_FOLDS[@]}"; do
+    test_fold=${TEST_FOLDS[i]}
+    localiser="('localiser-$REGION','public-1gpu-150epochs','BEST')"
+    segmenter="('segmenter-$REGION','clinical-1gpu-150epochs-fold-$test_fold','BEST')"
+    python $SCRIPT_DIR/evaluate/nifti/two-stage/create_evaluation_from_loader --datasets $DATASETS --region $REGION --localiser $localiser --segmenter $segmenter \
+        --n_folds $N_FOLDS --test_folds $test_fold
+done

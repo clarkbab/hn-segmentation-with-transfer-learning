@@ -1,0 +1,10 @@
+#! /usr/bin/env bash
+
+parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")"; cd ..; pwd -P )
+cd $parent_path
+
+DATASET="PMCC-HN-TEST"
+REGION="BrachialPlexus_L"
+SUBregion=True
+
+python create_region_figures --dataset $DATASET --region $REGION --subregions $SUBREGIONS

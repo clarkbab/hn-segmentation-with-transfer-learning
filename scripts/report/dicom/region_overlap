@@ -1,0 +1,13 @@
+import fire
+import os
+import sys
+
+root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+sys.path.append(root_dir)
+
+from hnas.reporting.dataset.raw.dicom import get_region_overlap
+
+fire.Fire(get_region_overlap)
+
+# Sample args:
+# --dataset HN1 --regions "(Parotid_L,Parotid_R)"

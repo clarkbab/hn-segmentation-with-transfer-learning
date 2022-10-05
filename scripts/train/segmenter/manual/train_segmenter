@@ -1,0 +1,41 @@
+#! /usr/bin/env bash
+
+module load gcccore/8.3.0
+module load python/3.8.2
+module load web_proxy
+
+DATASETS="['PMCC-HN-TEST-SEG','PMCC-HN-TRAIN-SEG']"
+REGION="Submandibular_L"
+MODEL_NAME="segmenter-$REGION"
+N_EPOCHS=5
+N_FOLDS=5
+N_GPUS=1
+N_NODES=1
+N_WORKERS=4
+N_TRAIN=5
+PRETRAINED_MODEL=None
+RESUME=False
+RESUME_CHECKPOINT=None
+RUN_NAME="clinical-fold-0-samples-5"
+SCRIPT_DIR="/data/gpfs/projects/punim1413/medical-imaging/scripts"
+TEST_FOLD=0
+USE_LOGGER=True
+
+python $SCRIPT_DIR/train/segmenter/train.py \
+    --datasets $DATASETS \
+    --model $MODEL_NAME \
+    --n_epochs $N_EPOCHS \
+    --n_folds $N_FOLDS \
+    --n_gpus $N_GPUS \
+    --n_nodes $N_NODES \
+    --n_train $N_TRAIN \
+    --n_workers $N_WORKERS \
+    --pretrained_model $PRETRAINED_MODEL \
+    --use_logger $USE_LOGGER \
+    --region $REGION \
+    --resume $RESUME \
+    --resume_checkpoint $RESUME_CHECKPOINT \
+    --run $RUN_NAME \
+    --slurm_array_job_id $SLURM_ARRAY_JOB_ID \
+    --slurm_array_task_id $SLURM_ARRAY_TASK_ID \
+    --test_fold $TEST_FOLD
