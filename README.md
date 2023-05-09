@@ -430,32 +430,3 @@ convert_to_training(
     spacing=(4, 4, 4)               # Resample images/labels to the spacing.
 )
 ```
-
-### Dataset API
-
-The `Dataset` API allows for basic queries to be performed on the installed datasets.
-
-#### DICOM Dataset
-
-
-#### NIFTI Dataset
-
-#### TRAINING Dataset
-
-## Visualisation
-
-
-
-
-## Pretrained public models
-
-These models were trained on the following Cancer Imaging Archive (TCIA) datasets:
-- HN1
-- HNPCT
-- HNSCC
-- OPC
-
-You can download the pretrained public localiser
-
-## Training public model
-
