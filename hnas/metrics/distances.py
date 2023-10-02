@@ -4,32 +4,6 @@ from typing import Dict, List, Literal, Tuple, Union
 
 from hnas.geometry import get_extent, get_extent_centre
 from hnas import types
-from surface_distance import compute_average_surface_distance, compute_robust_hausdorff, compute_surface_dice_at_tolerance, compute_surface_distances
-
-def distances_deepmind(
-    a: np.ndarray,
-    b: np.ndarray,
-    spacing: types.ImageSpacing3D,
-    tolerances: Union[float, List[float]]) -> Dict[str, float]:
-    if a.shape != b.shape:
-        raise ValueError(f"Metric 'distances' expects arrays of equal shape. Got '{a.shape}' and '{b.shape}'.")
-    if a.dtype != np.bool_ or b.dtype != np.bool_:
-        raise ValueError(f"Metric 'distances' expects boolean arrays. Got '{a.dtype}' and '{b.dtype}'.")
-    if a.sum() == 0 or b.sum() == 0:
-        raise ValueError(f"Metric 'distances' can't be calculated on empty sets. Got cardinalities '{a.sum()}' and '{b.sum()}'.")
-    if type(tolerances) == int or type(tolerances) == float:
-        tolerances = [tolerances]
-
-    surf_dists = compute_surface_distances(a, b, spacing) 
-    metrics = {
-        'hd': compute_robust_hausdorff(surf_dists, 100),
-        'msd': np.mean(compute_average_surface_distance(surf_dists)),
-        'hd-95': compute_robust_hausdorff(surf_dists, 95)
-    }
-    for tol in tolerances:
-        metrics[f'surface-dice-tol-{tol}'] = compute_surface_dice_at_tolerance(surf_dists, tol)
-
-    return metrics
 
 def apl(
     surf_dists: Tuple[np.ndarray, np.array],

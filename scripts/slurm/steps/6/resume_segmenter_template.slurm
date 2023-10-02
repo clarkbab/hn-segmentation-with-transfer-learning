@@ -10,6 +10,9 @@
 #SBATCH --partition feit-gpu-a100
 #SBATCH --qos feit
 
+echo $HNAS_CODE
+echo $HNAS_DATA
+
 source ~/venvs/transfer-learning/bin/activate
 
 version=$(python --version)
@@ -46,7 +49,7 @@ RESUME_CHECKPOINT='last'
 USE_LOGGER=False        # Set 'True' to use 'wandb' logging. Must set this up first (https://wandb.ai).
 RUN_NAME="public-1gpu-150epochs"
 
-command="python $HNAS_CODE/scripts/train/segmenter/train_segmenter.py \
+command="python $HNAS_CODE/scripts/slurm/steps/6/train_segmenter.py \
     --dataset $DATASET \
     --model_name $MODEL_NAME \
     --run_name $RUN_NAME \

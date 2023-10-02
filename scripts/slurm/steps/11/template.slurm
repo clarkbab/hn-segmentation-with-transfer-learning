@@ -10,6 +10,9 @@
 #SBATCH --partition feit-gpu-a100
 #SBATCH --qos feit
 
+echo $HNAS_CODE
+echo $HNAS_DATA
+
 source ~/venvs/transfer-learning/bin/activate
 
 version=$(python --version)

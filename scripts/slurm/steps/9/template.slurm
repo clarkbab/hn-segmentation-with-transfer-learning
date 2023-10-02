@@ -3,6 +3,9 @@
 #SBATCH --mem 32G
 #SBATCH --time 0-12:00:00
 
+echo $HNAS_CODE
+echo $HNAS_DATA
+
 source ~/venvs/transfer-learning/bin/activate
 
 version=$(python --version)

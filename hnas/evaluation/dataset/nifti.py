@@ -10,7 +10,7 @@ from hnas import config
 from hnas import dataset as ds
 from hnas.geometry import get_box, get_extent_centre
 from hnas.loaders import Loader
-from hnas.metrics import all_distances, dice, distances_deepmind, extent_centre_distance, get_encaps_dist_mm
+from hnas.metrics import all_distances, dice, extent_centre_distance, get_encaps_dist_mm
 from hnas.models.systems import Localiser, Segmenter
 from hnas import logging
 from hnas.prediction.dataset.nifti import load_patient_localiser_prediction, load_patient_segmenter_prediction
@@ -60,11 +60,6 @@ def get_patient_localiser_evaluation(
         dists = all_distances(pred, label, spacing, tols)
         for metric, value in dists.items():
             data[metric] = value
-
-        # Add 'deepmind' comparison.
-        dists = distances_deepmind(pred, label, spacing, tols)
-        for metric, value in dists.items():
-            data[f'dm-{metric}'] = value
 
     # Extent distance.
     if pred.sum() == 0:
@@ -306,11 +301,6 @@ def get_patient_segmenter_evaluation(
         dists = all_distances(pred, label, spacing, tols)
         for metric, value in dists.items():
             data[metric] = value
-
-        # Add 'deepmind' comparison.
-        dists = distances_deepmind(pred, label, spacing, tols)
-        for metric, value in dists.items():
-            data[f'dm-{metric}'] = value
 
     return data
     
